@@ -12,7 +12,7 @@ def filter_by_state(lists: list, value_state: str = "EXECUTED") -> list:
     return state_list
 
 
-def sort_by_date(list_date: list, sort: bool = False) -> list:
+def sort_by_date(list_date: list, sort: bool = True) -> list:
     """
 
     Функция принимает список словарей и необязательный параметр, задающий порядок сортировки (по умолчанию — убывание)
