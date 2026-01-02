@@ -3,7 +3,7 @@ def filter_by_state(lists, value_state = "EXECUTED") -> list:
 
     """
     Функция принимает список словарей и опционально значение для ключа
-state, (по умолчанию 'EXECUTED') и возвращает новый список словарей, содержащий только те словари, у которых ключ
+state, (по умолчанию 'EXECUTED') и возвращает новый список словарей state_list, содержащий только те словари, у которых ключ
 state соответствует указанному значению)
     """
     state_list = []
@@ -12,4 +12,19 @@ state соответствует указанному значению)
             if value == value_state:
                 state_list.append(dictionaries)
     return state_list
+
+
+
+def sort_by_date(list_date, sort = False) -> list:
+    """
+
+    Функция принимает список словарей и необязательный параметр, задающий порядок сортировки (по умолчанию — убывание) и
+    возвращает список new_list_date, отсортированный по дате.
+    """
+    new_list_date = sorted (list_date, key=lambda date: date["date"] , reverse = sort)
+
+    return new_list_date
+
+
+
 
