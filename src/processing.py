@@ -5,6 +5,9 @@ def filter_by_state(original_list: list, value_state: str = "EXECUTED") -> list:
     у которых ключ state соответствует указанному значению)
     """
     state_list = []
+    if value_state != "CANCELED":
+        value_state = "EXECUTED"
+
     for points in original_list:
         for value in points.values():
             if value == value_state:
@@ -16,8 +19,14 @@ def sort_by_date(list_date: list, sort: bool = True) -> list:
     """
 
     Функция принимает список словарей и необязательный параметр, задающий порядок сортировки (по умолчанию — убывание)
-    и возвращает список new_list_date, отсортированный по дате.
+    и возвращает список sorting_date, отсортированный по дате.
     """
-    sorting_date = sorted(list_date, key=lambda date: date["date"], reverse=sort)
+    sorting_date = []
+    for x in list_date:
+        for key, value in x.items():
+            if key == "date" and len(value) != 26:
+                sorting_date = "Некорректный список"
+            else:
+                sorting_date = sorted(list_date, key=lambda date: date["date"], reverse=sort)
 
     return sorting_date
