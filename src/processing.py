@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 def filter_by_state(original_list: list, value_state: str = "EXECUTED") -> list:
     """
         Функция принимает список словарей и опционально значение для ключа
@@ -15,9 +18,8 @@ def filter_by_state(original_list: list, value_state: str = "EXECUTED") -> list:
     return state_list
 
 
-def sort_by_date(list_date: list, sort: bool = True) -> list:
+def sort_by_date(list_date: list, sort: bool = True) -> Optional[list, str]:
     """
-
     Функция принимает список словарей и необязательный параметр, задающий порядок сортировки (по умолчанию — убывание)
     и возвращает список sorting_date, отсортированный по дате.
     """
