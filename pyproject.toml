@@ -35,7 +35,7 @@ exclude = ['venv', 'tests']
 # Максимальная длина строки
 line-length = 119
 # Файлы, которые не нужно форматировать
-exclude = ['.direnv', '.eggs', '.git', '.mypy_cache', '.pytest_cache',  '.venv', '.vscode', '__pypackages__', 'venv']
+exclude = "'.direnv', '.eggs', '.git', '.mypy_cache', '.pytest_cache',  '.venv', '.vscode', '__pypackages__', 'venv'"
 
 [tool.isort]
 # максимальная длина строки
