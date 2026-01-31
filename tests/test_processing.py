@@ -1,7 +1,7 @@
 from src.processing import filter_by_state, sort_by_date
 
 
-def test_filter_by_state_1(value_executed):
+def test_filter_by_state_1(value_executed: list):
     assert (
         filter_by_state(
             [

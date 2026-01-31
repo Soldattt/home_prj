@@ -1,7 +1,7 @@
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 
 
-def test_filter_by_usd(filter_usd):
+def test_filter_by_usd(filter_usd: list):
 
     result = filter_by_currency(
         (
@@ -57,7 +57,7 @@ def test_filter_by_usd(filter_usd):
     assert list(result) == filter_usd
 
 
-def test_filter_by_rub(filter_rub):
+def test_filter_by_rub(filter_rub: list):
     result = filter_by_currency(
         [
             {
