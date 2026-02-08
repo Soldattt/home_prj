@@ -1,3 +1,4 @@
+from src.decorators import log
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
@@ -107,3 +108,13 @@ for _ in range(5):
 
 for card_number in card_number_generator(1, 5):
     print(card_number)
+
+
+
+###Функции модуля decorators.py:###
+
+@log(filename="mylog.txt")
+def my_function(x, y):
+    return x + y
+
+my_function(1, 2)
