@@ -14,17 +14,17 @@ def log(filename: Any = None) -> Any:
 
             try:
                 result = func(*args, **kwargs)
-                message = f"my_function ok\n" f"Результат: {result}\n"
+                message = f"{func.__name__} ok\n" f"Результат: {result}\n"
 
             except Exception as e:
-                message = f"my_function error: {type(e)} {args}\n"
+                message = f"{func.__name__} error: {type(e)} {args}\n"
 
             if filename:
                 with open(filename, "a", encoding="utf-8") as file:
                     file.write(message)
             else:
                 print(message)
-
+            return message
         return inner
 
     return wrapper
