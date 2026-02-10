@@ -11,8 +11,7 @@ def test_filter_by_state_1(value_executed: list):
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ],
             "EXECUTED",
-        ) == value_executed
-    )
+        ) == value_executed)
 
 
 def test_filter_by_state_2(value_canceled):
@@ -25,8 +24,7 @@ def test_filter_by_state_2(value_canceled):
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ],
             "CANCELED",
-        ) == value_canceled
-    )
+        ) == value_canceled)
 
 
 def test_filter_by_state_3(val_not):
@@ -38,8 +36,7 @@ def test_filter_by_state_3(val_not):
                 {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ]
-        ) == val_not
-    )
+        ) == val_not)
 
 
 def test_filter_by_state_4(value_random):
@@ -52,8 +49,7 @@ def test_filter_by_state_4(value_random):
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ],
             "awdawd",
-        ) == value_random
-    )
+        ) == value_random)
 
 
 def test_sort_reverse_true(sort_true):
@@ -65,8 +61,7 @@ def test_sort_reverse_true(sort_true):
                 {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ]
-        ) == sort_true
-    )
+        ) == sort_true)
 
     assert (
         sort_by_date(
@@ -77,8 +72,7 @@ def test_sort_reverse_true(sort_true):
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ],
             True,
-        ) == sort_true
-    )
+        ) == sort_true)
 
 
 def test_sort_reverse_false(sort_false):
@@ -91,8 +85,7 @@ def test_sort_reverse_false(sort_false):
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ],
             False,
-        ) == sort_false
-    )
+        ) == sort_false)
 
 
 def test_date_len():
@@ -115,5 +108,4 @@ def test_date(sort_date):
                 {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
                 {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
             ]
-        ) == sort_date
-    )
+        ) == sort_date)

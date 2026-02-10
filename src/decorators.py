@@ -2,16 +2,17 @@ from typing import Any
 
 # from time import time
 
-"""
-Декоратор принимает на вход параметр filename(название файла) и записывает в него результат выполнения функцию
-Если параметр не задан, то результаты выводятся в консоль
-"""
-
 
 def log(filename: Any = None) -> Any:
     def wrapper(func: Any) -> Any:
         def inner(*args: Any, **kwargs: Any) -> Any:
+            """
+            Декоратор принимает на вход параметр filename(название файла)
+            и записывает в него результат выполнения функцию
+            Если параметр не задан, то результаты выводятся в консоль
+            """
 
+            result = None
             try:
                 result = func(*args, **kwargs)
                 message = f"{func.__name__} ok\n" f"Результат: {result}\n"
@@ -24,7 +25,8 @@ def log(filename: Any = None) -> Any:
                     file.write(message)
             else:
                 print(message)
-            return message
+            return result
+
         return inner
 
     return wrapper
