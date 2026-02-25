@@ -4,10 +4,9 @@ import os
 import requests
 from dotenv import load_dotenv
 
+from src.utils import valute_transaction
 
-
-
-load_dotenv()
+load_dotenv('.env')
 
 API_KEY = os.getenv("API_KEY")
 
@@ -33,7 +32,7 @@ def operation_amount(transaction: list[dict] | dict) -> list[float]:
                  result.append(amount_cur)
     return result
 
-
+print(operation_amount(valute_transaction()))
 
 
 
