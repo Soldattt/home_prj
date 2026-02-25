@@ -5,6 +5,8 @@ from src.generators import card_number_generator, filter_by_currency, transactio
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
 from src.widget import get_date, mask_account_card
+from src.utils import valute_transaction
+from src.external_api import operation_amount
 
 ###Функции модуля masks.py:###
 
@@ -121,3 +123,7 @@ def my_function(x: Any, y: Any) -> Any:
 
 
 my_function(1, 2)
+
+
+
+
