@@ -134,3 +134,13 @@ def filter_dis_1():
 @pytest.fixture
 def filter_dis_2():
     return ["Перевод организации", "Перевод организации"]
+
+
+@pytest.fixture
+def api_rus():
+    return [31957.58]
+
+
+@pytest.fixture
+def api_none():
+    return []

@@ -1,45 +1,34 @@
 import os
 
-
 import requests
 from dotenv import load_dotenv
 
-from src.utils import valute_transaction
-
-load_dotenv('.env')
+load_dotenv(".env")
 
 API_KEY = os.getenv("API_KEY")
 
 
-def operation_amount(transaction: list[dict] | dict) -> list[float]:
+def operation_amount(transaction: list) -> list:
     """
-    Функция возвращает сумму операции в рублях
+    Функция принимает список транзакций и возвращает список с суммой каждой транзакции в рублях
     """
 
     result = []
     for transact in transaction:
 
-        if transact != {}:
-            currency = transact.get('operationAmount').get('currency').get('code')
-            amount_cur = float(transact.get('operationAmount').get('amount'))
-            if currency != 'RUB':
-                response = requests.get(f'https://v6.exchangerate-api.com/v6/{API_KEY}/pair/{currency}/RUB/{amount_cur}')
-                if response.status_code == 200:
-                    data = response.json()
-                    amount = round(float(data.get('conversion_result')),2)
-                    result.append(amount)
+        if transact != {}:  # если список на входе не пустой, вычисляем валюту и сумму транзакции
+            currency = transact.get("operationAmount").get("currency").get("code")
+            amount_cur = float(transact.get("operationAmount").get("amount"))
+            if currency != "RUB":  # если транзакция не в рублях, следующий запрос производит конвертирование суммы
+                response = requests.get(
+                    f"https://v6.exchangerate-api.com/v6/{API_KEY}/pair/{currency}/RUB/{amount_cur}"
+                )
+                data = response.json()
+                amount = round(float(data.get("conversion_result")), 2)
+                result.append(amount)
+
             else:
-                 result.append(amount_cur)
+                result.append(amount_cur)
+        else:
+            pass
     return result
-
-print(operation_amount(valute_transaction()))
-
-
-
-
-
-
-
-
-
-
