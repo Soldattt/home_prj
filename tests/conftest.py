@@ -138,9 +138,9 @@ def filter_dis_2():
 
 @pytest.fixture
 def api_rus():
-    return [31957.58]
+    return 31957.58
 
 
 @pytest.fixture
 def api_none():
-    return []
+    return None

@@ -1,10 +1,12 @@
 import json
+from typing import Any
 
 
-def valute_transaction() -> list:
+def valute_transaction(path: str = "../data/operations.json") -> Any:
+
     try:
-        with open("../data/operations.json", "r", encoding="utf-8") as f:
+        with open(f"{path}", "r", encoding="utf-8") as f:
             transaction = json.load(f)
-        return transaction
-    except (json.JSONDecodeError, IOError):
-        return []
+            return transaction
+    except Exception:
+        raise FileNotFoundError
