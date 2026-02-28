@@ -4,15 +4,12 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
-
-
 load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
 
 
-
-def operation_amount(transaction: dict) -> Any:
+def operation_amount(transaction: dict) -> Any[float]:
     """
     Функция принимает список транзакций и возвращает список с суммой каждой транзакции в рублях
     """
@@ -21,9 +18,7 @@ def operation_amount(transaction: dict) -> Any:
         amount_cur = float(transaction.get("operationAmount").get("amount"))
 
         if currency != "RUB":  # если транзакция не в рублях, следующий запрос производит конвертирование суммы
-            response = requests.get(
-                 f"https://v6.exchangerate-api.com/v6/{API_KEY}/pair/{currency}/RUB/{amount_cur}"
-                )
+            response = requests.get(f"https://v6.exchangerate-api.com/v6/{API_KEY}/pair/{currency}/RUB/{amount_cur}")
             data = response.json()
 
             return round(float(data.get("conversion_result")), 2)
@@ -32,6 +27,3 @@ def operation_amount(transaction: dict) -> Any:
             return amount_cur
     else:
         pass
-
-
-
