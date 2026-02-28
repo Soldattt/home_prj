@@ -7,7 +7,7 @@ from src.external_api import operation_amount
 
 def test_api_rus(api_rus):
     result = operation_amount(
-        [
+
             {
                 "id": 441945886,
                 "state": "EXECUTED",
@@ -17,14 +17,14 @@ def test_api_rus(api_rus):
                 "from": "Maestro 1596837868705199",
                 "to": "Счет 64686473678894779589",
             }
-        ]
+
     )
 
     assert result == api_rus
 
 
 def test_api_none(api_none):
-    result = operation_amount([{}])
+    result = operation_amount({})
     assert result == api_none
 
 
