@@ -1,0 +1,4 @@
+my_function ok
+Результат: 3
+my_function ok
+Результат: 3
