@@ -7,12 +7,12 @@ def test_notfound_file():
 
 
 def test_empty_file():
-    result = valute_transaction("test_data/test_operation.json")
+    result = valute_transaction("C:/PYTHON/home_prj/tests/test_data/test_operation.json")
     assert result == "Ошибка в данных файла"
 
 
 def test_open_file():
-    result = valute_transaction("../tests/test_data/test_operation_1.json")
+    result = valute_transaction("C:/PYTHON/home_prj/tests/test_data/test_operation_1.json")
     assert result == [
         {
             "id": 441945886,
