@@ -1,4 +1,10 @@
+import os
+
 from src.utils import valute_transaction
+
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+data_file_path = os.path.join(project_root, "tests", "test_data", "test_operation.json")
+data_file_path_1 = os.path.join(project_root, "tests", "test_data", "test_operation_1.json")
 
 
 def test_notfound_file():
@@ -7,12 +13,12 @@ def test_notfound_file():
 
 
 def test_empty_file():
-    result = valute_transaction("C:/PYTHON/home_prj/tests/test_data/test_operation.json")
+    result = valute_transaction(data_file_path)
     assert result == "Ошибка в данных файла"
 
 
 def test_open_file():
-    result = valute_transaction("C:/PYTHON/home_prj/tests/test_data/test_operation_1.json")
+    result = valute_transaction(data_file_path_1)
     assert result == [
         {
             "id": 441945886,
