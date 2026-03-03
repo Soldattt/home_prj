@@ -15,8 +15,9 @@ def open_csv_file(path: str) -> Any:
     """
     try:
         try:
-            csv_reader = pd.read_csv(path, encoding="utf-8")
-            return csv_reader
+            reader = pd.read_csv(path, sep=";", encoding="utf-8")
+            cvs_reader = reader.to_dict(orient='records')
+            return cvs_reader
         except EmptyDataError:
             return "Ошибка в данных файла"
     except FileNotFoundError:
@@ -31,7 +32,7 @@ def open_excel_file(path: str) -> Any:
         try:
             excel_reader = pd.read_excel(path)
             not_null_excel_reader = excel_reader.loc[excel_reader.id.notnull()]
-            return not_null_excel_reader
+            return not_null_excel_reader.to_dict(orient='records')
         except ValueError:
             return "Ошибка в данных файла"
     except FileNotFoundError:
