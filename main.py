@@ -1,9 +1,11 @@
+import os
 from typing import Any
 
 from src.decorators import log
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
+from src.reading_data import open_csv_file, open_excel_file, project_root
 from src.widget import get_date, mask_account_card
 
 ###Функции модуля masks.py:###
@@ -121,3 +123,12 @@ def my_function(x: Any, y: Any) -> Any:
 
 
 my_function(1, 2)
+
+
+###Функции модуля reading_data.py:###
+
+path_csv = os.path.join(project_root, "data", "transactions.csv")
+path_excel = os.path.join(project_root, "data", "transactions_excel.xlsx")
+print(open_csv_file(path_csv))
+
+print(open_excel_file(path_excel))
