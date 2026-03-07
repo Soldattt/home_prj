@@ -1,134 +1,64 @@
-import os
-from typing import Any
-
-from src.decorators import log
-from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
-from src.masks import get_mask_account, get_mask_card_number
-from src.processing import filter_by_state, sort_by_date
-from src.reading_data import open_csv_file, open_excel_file, project_root
-from src.widget import get_date, mask_account_card
-
-###Функции модуля masks.py:###
-
-mask_card = get_mask_card_number("7000792289606361")
-print(mask_card)
+from src.reading_data import open_csv_file, open_excel_file
+from src.transactions_for_user import process_bank_search
+from src.utils import valute_transaction
 
 
-mask_account = get_mask_account("73654108430135874305")
-print(mask_account)
+def main() -> str:
+    """
+    Основная функция для запуска программы, производит сбор информации от пользователя через запросы, считывает
+    информацию из выбранного файла и передает ее в модуль transactions_for_user
+    """
+    print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
+    valid_user_selection = False
+    valid_user_search = False
+    while not valid_user_selection:
+        user_selection = input(
+            "Укажите номер пункта, откуда хотите получить данные:\n"
+            "1. Получить информацию о транзакциях из JSON-файла\n"
+            "2. Получить информацию о транзакциях из CSV-файла\n"
+            "3. Получить информацию о транзакциях из XLSX-файла \n"
+        )
+        if user_selection in ["1", "2", "3"]:
+            valid_user_selection = True
+            while not valid_user_search:
+                user_search = str(
+                    input(
+                        "\nВведите статус, по которому необходимо выполнить фильтрацию.\n"
+                        "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
+                    )
+                ).upper()
+                if user_search in ["EXECUTED", "CANCELED", "PENDING"]:
+                    valid_user_search = True
+
+                    if user_selection == "1":
+                        print("\nДля обработки данных выбран JSON-файл")
+                        print(f"Для фильтрации выбран статус {user_search}\n")
+                        data = valute_transaction()
+                        result = process_bank_search(data, user_search)
+                        return result
+
+                    elif user_selection == "2":
+                        print("\nДля обработки данных выбран CSV-файл")
+                        print(f"Для фильтрации выбран статус {user_search}\n")
+                        data = open_csv_file()
+                        result = process_bank_search(data, user_search)
+                        return result
+
+                    elif user_selection == "3":
+                        print("\nДля обработки данных выбран XLSX-файл")
+                        print(f"Для фильтрации выбран статус {user_search}\n")
+                        data = open_excel_file()
+                        result = process_bank_search(data, user_search)
+                        return result
+                else:
+                    print(
+                        f"\nСтатус {user_search} недоступен."
+                        f" Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING"
+                    )
+
+        else:
+            print("\nУкажите корректный пункт")
 
 
-###Функции модуля widget.py:###
-
-account_mask = mask_account_card("Maestro 1596837868705199")
-print(account_mask)
-
-date_mask = get_date("2024-03-11T02:26:18.671407")
-print(date_mask)
-
-###Функции модуля processing.py:###
-
-filter_list = filter_by_state(
-    [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-    ]
-)
-print(filter_list)
-
-
-sorting_list = sort_by_date(
-    [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-    ]
-)
-print(sorting_list)
-
-
-###Функции модуля generators.py:###
-
-##Пример вводимых данных для работы функций filter_by_currency и transaction_descriptions##
-transactions = [
-    {
-        "id": 939719570,
-        "state": "EXECUTED",
-        "date": "2018-06-30T02:08:58.425572",
-        "operationAmount": {"amount": "9824.07", "currency": {"name": "USD", "code": "USD"}},
-        "description": "Перевод организации",
-        "from": "Счет 75106830613657916952",
-        "to": "Счет 11776614605963066702",
-    },
-    {
-        "id": 142264268,
-        "state": "EXECUTED",
-        "date": "2019-04-04T23:20:05.206878",
-        "operationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
-        "description": "Перевод со счета на счет",
-        "from": "Счет 19708645243227258542",
-        "to": "Счет 75651667383060284188",
-    },
-    {
-        "id": 873106923,
-        "state": "EXECUTED",
-        "date": "2019-03-23T01:09:46.296404",
-        "operationAmount": {"amount": "43318.34", "currency": {"name": "руб.", "code": "RUB"}},
-        "description": "Перевод со счета на счет",
-        "from": "Счет 44812258784861134719",
-        "to": "Счет 74489636417521191160",
-    },
-    {
-        "id": 895315941,
-        "state": "EXECUTED",
-        "date": "2018-08-19T04:27:37.904916",
-        "operationAmount": {"amount": "56883.54", "currency": {"name": "USD", "code": "USD"}},
-        "description": "Перевод с карты на карту",
-        "from": "Visa Classic 6831982476737658",
-        "to": "Visa Platinum 8990922113665229",
-    },
-    {
-        "id": 594226727,
-        "state": "CANCELED",
-        "date": "2018-09-12T21:27:25.241689",
-        "operationAmount": {"amount": "67314.70", "currency": {"name": "руб.", "code": "RUB"}},
-        "description": "Перевод организации",
-        "from": "Visa Platinum 1246377376343588",
-        "to": "Счет 14211924144426031657",
-    },
-]
-currency_transactions = filter_by_currency(transactions, "USD")
-for _ in range(2):
-    print(next(currency_transactions))
-
-
-descriptions = transaction_descriptions(transactions)
-for _ in range(5):
-    print(next(descriptions))
-
-
-for card_number in card_number_generator(1, 5):
-    print(card_number)
-
-
-###Функции модуля decorators.py:###
-
-
-@log(filename="mylog.txt")
-def my_function(x: Any, y: Any) -> Any:
-    return x + y
-
-
-my_function(1, 2)
-
-
-###Функции модуля reading_data.py:###
-
-path_csv = os.path.join(project_root, "data", "transactions.csv")
-path_excel = os.path.join(project_root, "data", "transactions_excel.xlsx")
-print(open_csv_file(path_csv))
-
-print(open_excel_file(path_excel))
+if __name__ == "__main__":
+    print(main())
