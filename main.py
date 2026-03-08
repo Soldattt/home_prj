@@ -3,10 +3,10 @@ from src.transactions_for_user import process_bank_search
 from src.utils import valute_transaction
 
 
-def main() -> str:
+def main() -> str | dict:
     """
     Основная функция для запуска программы, производит сбор информации от пользователя через запросы, считывает
-    информацию из выбранного файла и передает ее в модуль transactions_for_user
+    информацию из выбранного файла и transactions_for_user
     """
     data = None
     user_search = None
@@ -64,15 +64,16 @@ def main() -> str:
         user_sorting = str(input("Введите да\нет:\n")).lower()
         if user_sorting in ["да", "нет"]:
             valid_user_sorting = True
-            print("\nОтсортировать по возрастанию или по убыванию?")
-            valid_user_direction = False
-            while not valid_user_direction:
-                user_direction = str(input("Введите по возрастанию\по убыванию:\n")).lower()
-                if user_direction in ["по возрастанию", "по убыванию"]:
-                    valid_user_direction = True
+            if user_sorting == "да":
+                print("\nОтсортировать по возрастанию или по убыванию?")
+                valid_user_direction = False
+                while not valid_user_direction:
+                    user_direction = str(input("Введите по возрастанию\по убыванию:\n")).lower()
+                    if user_direction in ["по возрастанию", "по убыванию"]:
+                        valid_user_direction = True
 
-                else:
-                    print("\nВведите только по возрастанию или по убыванию")
+                    else:
+                        print("\nВведите только по возрастанию или по убыванию")
         else:
             print("\nВведите только да или нет")
 
@@ -85,8 +86,19 @@ def main() -> str:
             valid_user_currency = True
         else:
             print("\nВведите только да или нет")
+    user_category = None
+    print("\nОтфильтровать список транзакций по определенному слову в описании?")
+    valid_user_operation = False
+    while not valid_user_operation:
+        user_operation = str(input("Введите да\нет:\n")).lower()
+        if user_operation in ["да", "нет"]:
+            valid_user_operation = True
+            if user_operation == "да":
+                user_category = input("\nВведите слово: \n")
+        else:
+            print("\nВведите только да или нет")
 
-    result = process_bank_search(data, user_search, user_sorting, user_direction, user_currency)
+    result = process_bank_search(data, user_search, user_sorting, user_direction, user_currency, user_category)
     return result
 
 

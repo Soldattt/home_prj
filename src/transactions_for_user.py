@@ -4,7 +4,9 @@ from collections import Counter
 from src.widget import get_date, mask_account_card
 
 
-def process_bank_search(data: list[dict], search: str, user_sorting, user_direction, user_currency) -> str:
+def process_bank_search(
+    data: list[dict], search: str, user_sorting, user_direction, user_currency, user_category
+) -> str | dict:
     """
     Функция принимает список транзакций и параметры, по которым необходимо производить сортировку на основании выборов
     пользователя и возвращает отсортированный список
@@ -19,7 +21,6 @@ def process_bank_search(data: list[dict], search: str, user_sorting, user_direct
         if pattern.search(str(state)):
             result.append(record)
 
-    sorting_date = None
     if user_sorting == "да":
         if user_direction == "по возрастанию":
             sorting_date = sorted(result, key=lambda date: date["date"], reverse=False)
@@ -39,81 +40,32 @@ def process_bank_search(data: list[dict], search: str, user_sorting, user_direct
     else:
         new_list = sorting_date
 
-    return process_bank_operations(new_list)
+    result_list = []
+    if user_category:
+        pattern_category = re.compile(user_category, re.IGNORECASE)
+        for record in new_list:
+            description = record.get("description")
+            if pattern_category.search(str(description)):
+                result_list.append(record)
+        return counter_operations(result_list)
+    else:
+        return counter_operations(new_list)
 
 
-def process_bank_operations(data: list[dict]) -> str:
+def counter_operations(data):
     """
-    Функция принимает список транзакций и запрашивает информацию для сортировки по описанию операции, а также считает
-    количество транзакций по наименованию операций и передает новый или существующий список транзакций и
-    словарь счетчика
+    Функция принимает список транзакций и посчитывает операции по категориям в описании каждой операции,
+    а далее возвращает список транзакций и словарь с количеством каждых операций
     """
-    data_list = data
-    result = []
-    count: dict = Counter()
-    print("\nОтфильтровать список транзакций по определенной операции в описании?")
-    valid_user_operation = False
-    while not valid_user_operation:
-        user_operation = str(input("Введите да\нет:\n")).lower()
-        if user_operation in ["да", "нет"]:
-            valid_user_valute = True
-            if user_operation == "да":
-                valid_user_category = False
-                while not valid_user_category:
-                    category = input(
-                        "\nУкажите пункт категории: \n"
-                        "1.Перевод организации \n"
-                        "2.Открытие вклада\n"
-                        "3.Перевод со счета на счет\n"
-                        "4.Перевод с карты на карту\n"
-                    )
-                    if category in ["1", "2", "3", "4"]:
-                        valid_user_category = True
-                        if category == "1":
-                            for operation in data_list:
-                                for v in operation.values():
-                                    if v == "Перевод организации":
-                                        count[v] += 1
-                                        result.append(operation)
-                        if category == "2":
-                            for operation in data_list:
-                                for v in operation.values():
-                                    if v == "Открытие вклада":
-                                        count[v] += 1
-                                        result.append(operation)
-                        if category == "3":
-                            for operation in data_list:
-                                for v in operation.values():
-                                    if v == "Перевод со счета на счет":
-                                        count[v] += 1
-                                        result.append(operation)
-                        if category == "4":
-                            for operation in data_list:
-                                for v in operation.values():
-                                    if v == "Перевод с карты на карту":
-                                        count[v] += 1
-                                        result.append(operation)
-                        return transaction_output(result, dict(count))
+    categories = ["Перевод с карты на карту", "Перевод со счета на счет", "Открытие вклада", "Перевод организации"]
 
-                    else:
-                        print("\nУкажите корректный пункт")
-
-            else:
-                categories = [
-                    "Перевод с карты на карту",
-                    "Перевод со счета на счет",
-                    "Открытие вклада",
-                    "Перевод организации",
-                ]
-                count = Counter()
-                for operation in data_list:
-                    description = operation["description"].lower()
-                    for category in categories:
-                        if re.search(re.escape(category.lower()), description):
-                            count[category] += 1
-
-        else:
-            print("\nВведите только да или нет")
+    count = Counter()
+    for operation in data:
+        description = operation["description"]
+        for x in categories:
+            if description == x:
+                count[x] += 1
+    return transaction_output(data, dict(count))
 
 
 def transaction_output(data: list[dict], sum_operations: dict) -> str | dict:
