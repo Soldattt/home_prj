@@ -4,10 +4,9 @@ from typing import Any
 
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 path_json = os.path.join(project_root, "data", "operations.json")
-path = path_json
 
 
-def valute_transaction(path: str) -> Any:
+def valute_transaction(path: str = path_json) -> Any:
     try:
 
         try:

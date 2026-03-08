@@ -4,10 +4,10 @@ from collections import Counter
 from src.widget import get_date, mask_account_card
 
 
-def process_bank_search(data: list[dict], search: str) -> str:
+def process_bank_search(data: list[dict], search: str, user_sorting, user_direction, user_currency) -> str:
     """
-    Функция принимает список транзакций, формирует новый список по указанному параметру состояния транзакции
-    и передает этот список в функцию sorting_by_date
+    Функция принимает список транзакций и параметры, по которым необходимо производить сортировку на основании выборов
+    пользователя и возвращает отсортированный список
     """
 
     pattern = re.compile(search, re.IGNORECASE)  # Игнорируем регистр для поиска
@@ -15,73 +15,31 @@ def process_bank_search(data: list[dict], search: str) -> str:
     result = []
 
     for record in data:
-        description = record.get("state")
-        if pattern.fullmatch(str(description)):
+        state = record.get("state")
+        if pattern.search(str(state)):
             result.append(record)
-    if result:
-        return sorting_by_date(result)
+
+    sorting_date = None
+    if user_sorting == "да":
+        if user_direction == "по возрастанию":
+            sorting_date = sorted(result, key=lambda date: date["date"], reverse=False)
+
+        else:
+            sorting_date = sorted(result, key=lambda date: date["date"], reverse=True)
     else:
-        return "Не найдено ни одной транзакции, подходящей под ваши условия фильтрации"
+        sorting_date = result
 
-
-def sorting_by_date(data: list[dict]) -> str:
-    """
-    Функция принимает список транзакций, запрашивает параметры сортировки по дате операций и на основании
-     выбора сортировки формирует новый список или передает существующий в функцию transactions
-    """
-    data_list = data
-    print("\nОтсортировать операции по дате?")
-    valid_user_sorting = False
-    while not valid_user_sorting:
-        user_sorting = str(input("Введите да\нет:\n")).lower()
-        if user_sorting in ["да", "нет"]:
-            valid_user_sorting = True
-            if user_sorting == "да":
-                print("\nОтсортировать по возрастанию или по убыванию?")
-                valid_user_direction = False
-                while not valid_user_direction:
-                    user_direction = str(input("Введите по возрастанию\по убыванию:\n")).lower()
-                    if user_direction in ["по возрастанию", "по убыванию"]:
-                        valid_user_direction = True
-                        if user_direction == "по возрастанию":
-                            sorting_date = sorted(data_list, key=lambda date: date["date"], reverse=False)
-                            return transactions(sorting_date)
-                        else:
-                            sorting_date = sorted(data_list, key=lambda date: date["date"], reverse=True)
-                            return transactions(sorting_date)
-
-                    else:
-                        print("\nВведите только по возрастанию или по убыванию")
-
-            else:
-                return transactions(data_list)
-        else:
-            print("\nВведите только да или нет")
-
-
-def transactions(data: list[dict]) -> str:
-    """
-    Функция принимает список транзакций и запрашивает параметры сортировки по валюте и передает в зависимости от выбора
-    пользователя новый или существующий список в функцию process_bank_operations
-    """
-    data_list = data
     new_list = []
-    print("\nВыводить только рублевые транзакции?")
-    valid_user_currency = False
-    while not valid_user_currency:
-        user_currency = str(input("Введите да\нет:\n")).lower()
-        if user_currency in ["да", "нет"]:
-            valid_user_currency = True
-            if user_currency == "да":
-                for operation in data_list:
-                    for v in operation.values():
-                        if v == "RUB":
-                            new_list.append(operation)
-                return process_bank_operations(new_list)
-            else:
-                return process_bank_operations(data_list)
-        else:
-            print("\nВведите только да или нет")
+
+    if user_currency == "да":
+        for operation in sorting_date:
+            for v in operation.values():
+                if v == "RUB":
+                    new_list.append(operation)
+    else:
+        new_list = sorting_date
+
+    return process_bank_operations(new_list)
 
 
 def process_bank_operations(data: list[dict]) -> str:
@@ -153,7 +111,6 @@ def process_bank_operations(data: list[dict]) -> str:
                     for category in categories:
                         if re.search(re.escape(category.lower()), description):
                             count[category] += 1
-                return transaction_output(data_list, dict(count))
 
         else:
             print("\nВведите только да или нет")

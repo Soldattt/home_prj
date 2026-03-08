@@ -8,6 +8,8 @@ def main() -> str:
     Основная функция для запуска программы, производит сбор информации от пользователя через запросы, считывает
     информацию из выбранного файла и передает ее в модуль transactions_for_user
     """
+    data = None
+    user_search = None
     print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
     valid_user_selection = False
     valid_user_search = False
@@ -34,22 +36,17 @@ def main() -> str:
                         print("\nДля обработки данных выбран JSON-файл")
                         print(f"Для фильтрации выбран статус {user_search}\n")
                         data = valute_transaction()
-                        result = process_bank_search(data, user_search)
-                        return result
 
                     elif user_selection == "2":
                         print("\nДля обработки данных выбран CSV-файл")
                         print(f"Для фильтрации выбран статус {user_search}\n")
                         data = open_csv_file()
-                        result = process_bank_search(data, user_search)
-                        return result
 
                     elif user_selection == "3":
                         print("\nДля обработки данных выбран XLSX-файл")
                         print(f"Для фильтрации выбран статус {user_search}\n")
                         data = open_excel_file()
-                        result = process_bank_search(data, user_search)
-                        return result
+
                 else:
                     print(
                         f"\nСтатус {user_search} недоступен."
@@ -58,6 +55,39 @@ def main() -> str:
 
         else:
             print("\nУкажите корректный пункт")
+
+    user_sorting = None
+    user_direction = None
+    print("\nОтсортировать операции по дате?")
+    valid_user_sorting = False
+    while not valid_user_sorting:
+        user_sorting = str(input("Введите да\нет:\n")).lower()
+        if user_sorting in ["да", "нет"]:
+            valid_user_sorting = True
+            print("\nОтсортировать по возрастанию или по убыванию?")
+            valid_user_direction = False
+            while not valid_user_direction:
+                user_direction = str(input("Введите по возрастанию\по убыванию:\n")).lower()
+                if user_direction in ["по возрастанию", "по убыванию"]:
+                    valid_user_direction = True
+
+                else:
+                    print("\nВведите только по возрастанию или по убыванию")
+        else:
+            print("\nВведите только да или нет")
+
+    user_currency = None
+    print("\nВыводить только рублевые транзакции?")
+    valid_user_currency = False
+    while not valid_user_currency:
+        user_currency = str(input("Введите да\нет:\n")).lower()
+        if user_currency in ["да", "нет"]:
+            valid_user_currency = True
+        else:
+            print("\nВведите только да или нет")
+
+    result = process_bank_search(data, user_search, user_sorting, user_direction, user_currency)
+    return result
 
 
 if __name__ == "__main__":
