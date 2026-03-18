@@ -19,7 +19,7 @@ def process_bank_search(data: list[dict], search: str) -> list[dict]:
     return result
 
 
-def counter_operations(data:list[dict]) -> dict:
+def counter_operations(data: list[dict]) -> dict:
     """
     Функция принимает список транзакций и посчитывает операции по категориям в описании каждой операции,
     а далее возвращает словарь с количеством каждых операций
